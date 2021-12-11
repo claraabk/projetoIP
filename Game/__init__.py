@@ -10,8 +10,8 @@ import pygame as pg
 
 # Locals
 from Game import settings
-from Game import Components
-
+from Game.Components import monica
+from Game.Components import background
 
 class GameLoop:
     '''
@@ -48,15 +48,19 @@ class GameLoop:
             pg.draw.line(self.screen, settings.GRIDCOLOR, (0, y), (settings.WIDTH, y))
 
         
-    def draw(self, grid_on=False): 
+    def draw(self, player, grid_on=False): 
         '''Game draw method.'''
 
         # Game Loop Background reset
-        self.screen.fill(settings.BGCOLOR)
+        self.screen.blit(background.grass, (0,0))
+        self.screen.blit(background.highway, background.highway_rect)
 
         # Draw a grid on game (DEBUG FUNCTION)
         if grid_on:
             self.draw_grid()
+
+        # Draw Monica
+        player.draw()
 
         # Update display
         # pg.display.flip() - I dont know what flip() do
@@ -69,23 +73,25 @@ class GameLoop:
         pg.quit()
         exit()
     
-    def events(self): 
+    def events(self, player): 
         '''Game events method.'''
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
+            player.control()
 
     def run(self):
         '''Game loop method.'''
 
         self.running = True
         clock = pg.time.Clock()
+        player = monica.Hero(self.screen, 375, 275)
 
         # Game loop
         while self.running:
             clock.tick(settings.FPS)
 
-            self.events()
+            self.events(player)
             self.update()
-            self.draw(grid_on=False)
+            self.draw(player, grid_on=False)
