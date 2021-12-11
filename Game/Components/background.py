@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 
+# valores utilizados:
 FPS = 30
 WIDTH = 800
 HEIGHT = 600
