@@ -15,6 +15,7 @@ from Game.Components import monica
 from Game.Components import background
 from Game.Components import cebolinha
 
+
 class GameLoop:
     '''
     Define Game Loop class.
@@ -49,12 +50,12 @@ class GameLoop:
             y += settings.GRIDHEIGHT
             pg.draw.line(self.screen, settings.GRIDCOLOR, (0, y), (settings.WIDTH, y))
 
-        
     def draw(self, player, enemies, scene, grid_on=False): 
         '''Game draw method.'''
 
         # Game Loop Background reset
         scene.draw()
+
 
         # Draw a grid on game (DEBUG FUNCTION)
         if grid_on:
@@ -77,6 +78,7 @@ class GameLoop:
         exit()
     
     def events(self, player, enemies): 
+
         '''Game events method.'''
 
         obstacle_timer = pg.USEREVENT + 1
@@ -97,6 +99,7 @@ class GameLoop:
                     ), random.randint(enemies.altura, settings.HEIGHT))
                 ))
 
+
             player.control()
 
     def run(self):
@@ -104,6 +107,7 @@ class GameLoop:
 
         self.running = True
         clock = pg.time.Clock()
+        
         player = monica.Hero(self.screen, 375, 275)
         enemies = cebolinha.Enemies(self.screen)
         scenery = background.Background(self.screen)

@@ -1,4 +1,3 @@
-
 import pygame
 
 from Game import settings 
@@ -23,5 +22,3 @@ class Background():
     def draw(self):
         self.screen.blit(self.grass, (0, 0))
         self.screen.blit(self.highway, self.highway_rect)
-
-    
