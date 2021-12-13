@@ -23,6 +23,5 @@ class Hero:
         if keys[pg.K_s]:
             self.y += self.vel
     
-
     def draw(self):
         pg.draw.rect(self.win, self.colour, (self.x, self.y, self.thickness, self.heigt))
