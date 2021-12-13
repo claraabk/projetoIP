@@ -48,7 +48,7 @@ class GameLoop:
             pg.draw.line(self.screen, settings.GRIDCOLOR, (0, y), (settings.WIDTH, y))
 
         
-    def draw(self, player, grid_on=False): 
+    def draw(self, player, bullet, grid_on=False): 
         '''Game draw method.'''
 
         # Game Loop Background reset
@@ -62,6 +62,8 @@ class GameLoop:
         # Draw Monica
         player.draw()
 
+        # Draw Shooting
+
         # Update display
         # pg.display.flip() - I dont know what flip() do
         pg.display.update()
@@ -73,7 +75,7 @@ class GameLoop:
         pg.quit()
         exit()
     
-    def events(self, player): 
+    def events(self, player, bullet): 
         '''Game events method.'''
 
         for event in pg.event.get():
@@ -87,11 +89,13 @@ class GameLoop:
         self.running = True
         clock = pg.time.Clock()
         player = monica.Hero(self.screen, 375, 275)
+        bullet_group = pg.sprite.Group()
+
 
         # Game loop
         while self.running:
             clock.tick(settings.FPS)
 
-            self.events(player)
+            self.events(player, bullet_group)
             self.update()
-            self.draw(player, grid_on=False)
+            self.draw(player, bullet_group, grid_on=False)

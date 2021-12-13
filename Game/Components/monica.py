@@ -1,4 +1,5 @@
 import pygame as pg
+# from Game.Components import sansao
 
 class Hero:
     def __init__(self, win, x, y):
@@ -13,9 +14,9 @@ class Hero:
 
     def control(self):
         keys = pg.key.get_pressed()
-        if self.y <= 0:
+        if self.y <= -50:
             self.y = 529
-        if self.y >= 530:
+        if self.y >= 624:
             self.y = 1
         if keys[pg.K_w]:
             self.y -= self.vel
