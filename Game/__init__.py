@@ -62,7 +62,7 @@ class GameLoop:
             self.draw_grid()
 
         # Draw Cebolinhas
-        enemies.draw()
+        # enemies.draw()
 
         # Draw Monica
         player.draw()
@@ -85,7 +85,7 @@ class GameLoop:
         pg.time.set_timer(obstacle_timer, 1000)
 
         # OBSTACLE LIST:
-        obstacle_rect_list = enemies.move([])
+        obstacle_rect_list = enemies.obstacle_rect_list
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -98,6 +98,8 @@ class GameLoop:
                         [-(0.5 * enemies.largura), settings.WIDTH + (0.5 * enemies.largura)]
                     ), random.randint(enemies.altura, settings.HEIGHT))
                 ))
+
+                enemies.spawn(obstacle_rect_list)
 
 
             player.control()
