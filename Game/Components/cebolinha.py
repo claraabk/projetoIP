@@ -1,48 +1,6 @@
 import pygame
 from sys import exit
 # CEBOLINHA:
-from Game import settings 
-
-class Enemies():
-
-    # limites do background:
-    TAMANHO_RUA = 120
-    direita = (settings.WIDTH-TAMANHO_RUA)/2
-    esquerda = settings.WIDTH - ((settings.WIDTH-TAMANHO_RUA)/2)
-    obstacle_rect_list = []
-
-    def __init__(self, screen):
-        self.screen = screen
-        self.altura = 40
-        self.largura = 40
-        self.cebolinha = pygame.Surface((self.altura, self.largura))
-    
-    def draw(self):
-        self.cebolinha = pygame.Surface((self.altura, self.largura))
-        self.cebolinha.fill("#f2e18d")
-
-    def spawn(self, lista):
-
-        if lista:
-            for obstaculo in lista:
-                if obstaculo.left == self.esquerda or obstaculo.right == self.direita:
-                    # dá pra colocar um contador de cebolinhas aqui
-                    lista.remove(obstaculo)
-                else:
-                    if self.esquerda < obstaculo.left <= settings.WIDTH:
-                        obstaculo.x -= 5
-                    elif obstaculo.right < self.direita:
-                        obstaculo.x += 5
-
-                self.screen.blit(self.cebolinha.fill("#f2e18d"), obstaculo)
-            return lista
-        else:
-            return []
-
-'''
-import pygame
-from sys import exit
-# CEBOLINHA:
 import random
 
 FPS = 30
@@ -105,37 +63,36 @@ def obstacle_movement(lista):
                 lista.remove(obstaculo)
             else:
                 if esquerda < obstaculo.left <= WIDTH:
-                    obstaculo.x -= 5
+                    obstaculo.x -= 1
                 elif obstaculo.right < direita:
-                    obstaculo.x += 5
+                    obstaculo.x += 1
 
             screen.blit(cebolinha, obstaculo)
         return lista
     else:
         return []
 
+if __name__ == '__main__':
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+            # CRIANDO CEBOLINHAS TD VEZ Q O TIMER ACIONA
+            if event.type == obstacle_timer:  # AND THE GAME IS ACTIVE
+                obstacle_rect_list.append(cebolinha.get_rect(
+                    midbottom=(random.choice([-(0.5*largura), WIDTH+(0.5*largura)]), random.randint(altura, HEIGHT))))
 
-        # CRIANDO CEBOLINHAS TD VEZ Q O TIMER ACIONA
-        if event.type == obstacle_timer:  # AND THE GAME IS ACTIVE
-            obstacle_rect_list.append(cebolinha.get_rect(
-                midbottom=(random.choice([-(0.5*largura), WIDTH+(0.5*largura)]), random.randint(altura, HEIGHT))))
+        # background:
+        screen.blit(grass, (0, 0))
+        screen.blit(highway, highway_rect)
 
-    # background:
-    screen.blit(grass, (0, 0))
-    screen.blit(highway, highway_rect)
+        # RUNNING THE SPAWN
+        # aqui ele vai robar o blit dos cebolinhas, ent vai ter movimento
+        # e vai updatar a obstacle_rect_list
+        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
-    # RUNNING THE SPAWN
-    # aqui ele vai robar o blit dos cebolinhas, ent vai ter movimento
-    # e vai updatar a obstacle_rect_list
-    obstacle_rect_list = obstacle_movement(obstacle_rect_list)
-
-    # "default":
-    pygame.display.update()
-    clock.tick(FPS)
-'''
+        # "default":
+        pygame.display.update()
+        clock.tick(FPS)

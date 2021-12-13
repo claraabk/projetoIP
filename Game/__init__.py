@@ -50,7 +50,7 @@ class GameLoop:
             y += settings.GRIDHEIGHT
             pg.draw.line(self.screen, settings.GRIDCOLOR, (0, y), (settings.WIDTH, y))
 
-    def draw(self, player, enemies, scene, grid_on=False): 
+    def draw(self, player, scene, grid_on=False): 
         '''Game draw method.'''
 
         # Game Loop Background reset
@@ -60,9 +60,6 @@ class GameLoop:
         # Draw a grid on game (DEBUG FUNCTION)
         if grid_on:
             self.draw_grid()
-
-        # Draw Cebolinhas
-        # enemies.draw()
 
         # Draw Monica
         player.draw()
@@ -77,32 +74,22 @@ class GameLoop:
         pg.quit()
         exit()
     
-    def events(self, player, enemies): 
-
+    def events(self, player, obstacles): 
         '''Game events method.'''
-
-        obstacle_timer = pg.USEREVENT + 1
-        pg.time.set_timer(obstacle_timer, 1000)
-
-        # OBSTACLE LIST:
-        obstacle_rect_list = enemies.obstacle_rect_list
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
             
             # cebolinha
-            if event.type == obstacle_timer:
-                obstacle_rect_list.append(enemies.cebolinha.get_rect(
-                    midbottom=(random.choice(
-                        [-(0.5 * enemies.largura), settings.WIDTH + (0.5 * enemies.largura)]
-                    ), random.randint(enemies.altura, settings.HEIGHT))
-                ))
-
-                enemies.spawn(obstacle_rect_list)
-
+            if event.type == cebolinha.obstacle_timer:  # AND THE GAME IS ACTIVE
+                obstacles.append(cebolinha.cebolinha.get_rect(
+                    midbottom=(
+                        random.choice([-(0.5*cebolinha.largura), cebolinha.WIDTH+(0.5*cebolinha.largura)]), random.randint(cebolinha.altura, cebolinha.HEIGHT)))
+                    )
 
             player.control()
+        
 
     def run(self):
         '''Game loop method.'''
@@ -111,13 +98,21 @@ class GameLoop:
         clock = pg.time.Clock()
         
         player = monica.Hero(self.screen, 375, 275)
-        enemies = cebolinha.Enemies(self.screen)
         scenery = background.Background(self.screen)
+
+        obstacle_timer = pg.USEREVENT + 1
+        pg.time.set_timer(obstacle_timer, 2100)
+
+        teste = cebolinha.obstacle_rect_list
 
         # Game loop
         while self.running:
             clock.tick(settings.FPS)
 
-            self.events(player, enemies)
+            self.events(player, teste)
             self.update()
-            self.draw(player, enemies, scenery, grid_on=False)
+            self.draw(player, scenery, grid_on=False)
+
+            teste = cebolinha.obstacle_movement(teste)
+
+            pg.display.flip()
