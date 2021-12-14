@@ -13,7 +13,7 @@ class Background():
     highway = pygame.transform.scale(highway, (120, 600))
     highway_rect = highway.get_rect(center=(400, 300))
 
-    grass = pygame.image.load("Game\Components\media\grass.png")
+    grass = pygame.image.load('Game\Components\media\definitiveback.jpg')
     grass = pygame.transform.scale(grass, (800, 600))
 
     def __init__(self, screen):
@@ -21,4 +21,3 @@ class Background():
     
     def draw(self):
         self.screen.blit(self.grass, (0, 0))
-        self.screen.blit(self.highway, self.highway_rect)
