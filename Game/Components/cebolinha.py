@@ -27,8 +27,9 @@ grass = pygame.image.load("Game\Components\media\grass.png")
 grass = pygame.transform.scale(grass, (WIDTH, HEIGHT))
 
 # TIMER:
+timer = 1000
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer, 1000)
+pygame.time.set_timer(obstacle_timer, timer)
 
 # OBSTACLE LIST:
 obstacle_rect_list = []
@@ -55,11 +56,13 @@ def obstacle_movement(lista, shoots, shootsR):
     global esquerda
     global dead_cebolinhas 
     global vida_monica
+    global timer
     if lista:
         for obstaculo in lista:
             if obstaculo.left == esquerda or obstaculo.right == direita:
                 lista.remove(obstaculo)
                 vida_monica -= 1
+                print("VIDA:", vida_monica)
                 
             if esquerda < obstaculo.left <= WIDTH:
                 obstaculo.x -= 1
@@ -68,15 +71,18 @@ def obstacle_movement(lista, shoots, shootsR):
 
             for shoot in shoots:
                 if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
-                    shoot.y > obstaculo.y - 20 and shoot.y < obstaculo.y + 20):
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
                     dead_cebolinhas += 1
+                    timer -= 100
+                    print("CEBOLINHAS:", dead_cebolinhas)
                     lista.remove(obstaculo)
                     shoots.remove(shoot)
             
             for shoot in shootsR:
                 if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
-                    shoot.y > obstaculo.y - 20 and shoot.y < obstaculo.y + 20):
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
                     dead_cebolinhas += 1
+                    print("CEBOLINHAS:", dead_cebolinhas)
                     shootsR.remove(shoot)
                     lista.remove(obstaculo)
 

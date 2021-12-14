@@ -26,9 +26,9 @@ class Hero:
     def control(self):
         keys = pg.key.get_pressed()
         if self.y <= 45:
-            self.y = 600
-        if self.y >= 624:
             self.y = 45
+        if self.y >= 500:
+            self.y = 500
         if keys[pg.K_w]:
             self.y -= self.vel
         if keys[pg.K_s]:

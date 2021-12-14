@@ -115,7 +115,7 @@ class GameLoop:
         shootsR = []
 
         obstacle_timer = pg.USEREVENT + 1
-        pg.time.set_timer(obstacle_timer, 2100)
+        pg.time.set_timer(obstacle_timer, 1400)
 
         teste = cebolinha.obstacle_rect_list
 
