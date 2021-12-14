@@ -126,7 +126,7 @@ class GameLoop:
             self.draw(player, scenery, shoots, shootsR, grid_on=False)
             
 
-            teste = cebolinha.obstacle_movement(teste)
+            teste = cebolinha.obstacle_movement(teste, shoots, shootsR)
             self.update()
             pg.display.update()
             clock.tick(settings.FPS)
