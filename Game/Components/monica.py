@@ -22,6 +22,9 @@ class Hero:
 
         self.default_monica = self.monica_to_right
 
+        self.player_left = True
+        self.player_right = True
+
 
     def control(self):
         keys = pg.key.get_pressed()
@@ -41,10 +44,14 @@ class Hero:
         if keys[pg.K_a]: 
             self.default_monica = self.monica_to_left
             self.x = 320
+            self.player_right = False
+            self.player_left = True
 
         elif keys[pg.K_d] :
             self.default_monica = self.monica_to_right
             self.x = 355
+            self.player_left = False
+            self.player_right = True
 
         self.win.blit(self.default_monica,(self.x,self.y))
 

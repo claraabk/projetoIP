@@ -94,9 +94,9 @@ class GameLoop:
                     )
 
             # shoot
-            if event.type == pg.KEYDOWN and event.key == pg.K_a:
+            if event.type == pg.KEYDOWN and event.key == pg.K_a and player.player_left:
                 shoots.append(monica.Bullet(self.screen, player.x, player.y))
-            if event.type == pg.KEYDOWN and event.key == pg.K_d:
+            if event.type == pg.KEYDOWN and event.key == pg.K_d and player.player_right:
                 shootsR.append(monica.Bullet(self.screen, player.x, player.y))
 
             player.control()
