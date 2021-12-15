@@ -55,12 +55,16 @@ class Bullet:
         self.x = x
         self.y = y
 
+        self.sansao_to_right = pg.image.load('Game\Components\media\sansao_to_right.png')
+        self.sansao_to_right = pg.transform.scale(self.sansao_to_right,(50,50))
+        self.sansao_to_left = pg.image.load('Game\Components\media\sansao_to_left.png')
+        self.sansao_to_left = pg.transform.scale(self.sansao_to_left,(50,50))
+
+
     def draw_right(self):
-        sansao = pg.image.load(os.path.join(os.path.dirname(__file__), "img/sansao.png"))
-        self.win.blit(sansao, (self.x+50, self.y+50))
+        self.win.blit(self.sansao_to_right, (self.x+50, self.y+30))
         self.x += 20
 
     def draw_left(self):
-        sansao = pg.image.load(os.path.join(os.path.dirname(__file__), "img/sansao.png"))
-        self.win.blit(sansao, (self.x-10, self.y+50))
+        self.win.blit(self.sansao_to_left, (self.x-10, self.y+20))
         self.x -= 20

@@ -36,8 +36,13 @@ obstacle_rect_list = []
 
 # CEBOLINHA SURFACE:
 altura, largura = 40, 40
-cebolinha = pygame.Surface((altura, largura))
-cebolinha.fill("#f2e18d")
+
+cebolinha_from_right = pygame.image.load('Game\Components\media\cebolinha_from_right.png')
+cebolinha_from_right = pygame.transform.scale(cebolinha_from_right,(82,90))
+cebolinha_from_left = pygame.image.load('Game\Components\media\cebolinha_from_left.png')
+cebolinha_from_left = pygame.transform.scale(cebolinha_from_left,(90,90))
+
+cebolinha = cebolinha_from_right
 
 dead_cebolinhas = 0
 vida_monica = 3
@@ -66,12 +71,14 @@ def obstacle_movement(lista, shoots, shootsR):
                 
             if esquerda < obstaculo.left <= WIDTH:
                 obstaculo.x -= 1
+                cebolinha = cebolinha_from_right
             elif obstaculo.right < direita:
                 obstaculo.x += 1
+                cebolinha = cebolinha_from_left
 
             for shoot in shoots:
                 if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
-                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y + 40):
                     dead_cebolinhas += 1
                     timer -= 100
                     print("CEBOLINHAS:", dead_cebolinhas)
@@ -80,7 +87,7 @@ def obstacle_movement(lista, shoots, shootsR):
             
             for shoot in shootsR:
                 if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
-                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y + 40):
                     dead_cebolinhas += 1
                     print("CEBOLINHAS:", dead_cebolinhas)
                     shootsR.remove(shoot)
