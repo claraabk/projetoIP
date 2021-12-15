@@ -1,38 +1,92 @@
 import pygame
-from sys import exit
-# CEBOLINHA:
-from Game import settings 
 
-class Enemies():
+FPS = 30
+WIDTH = 800
+HEIGHT = 600
 
-    # limites do background:
-    TAMANHO_RUA = 120
-    direita = (settings.WIDTH-TAMANHO_RUA)/2
-    esquerda = settings.WIDTH - ((settings.WIDTH-TAMANHO_RUA)/2)
+TILESIZE = 50
+GRIDWIDTH = WIDTH // TILESIZE
+GRIDHEIGHT = HEIGHT // TILESIZE
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.altura = 40
-        self.largura = 40
-    
-    def draw(self):
-        self.cebolinha = pygame.Surface((self.altura, self.largura))
-        self.cebolinha.fill("#f2e18d")
+# limites do background:
+TAMANHO_RUA = 120
+direita = (WIDTH-TAMANHO_RUA)/2
+esquerda = WIDTH - ((WIDTH-TAMANHO_RUA)/2)
 
-    def move(self, lista):
-        if lista:
-            for obstaculo in lista:
-                if obstaculo.left == self.esquerda or obstaculo.right == self.direita:
-                    # dá pra colocar um contador de cebolinhas aqui
+# "default":
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Background")
+clock = pygame.time.Clock()
+
+# criando as surfaces:
+highway = pygame.image.load("Game\Components\media\highway.png")
+highway = pygame.transform.scale(highway, (120, 600))
+highway_rect = highway.get_rect(center=(400, 300))
+grass = pygame.image.load("Game\Components\media\grass.png")
+grass = pygame.transform.scale(grass, (WIDTH, HEIGHT))
+
+# TIMER:
+timer = 1000
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer, timer)
+
+# OBSTACLE LIST:
+obstacle_rect_list = []
+
+# CEBOLINHA SURFACE:
+altura, largura = 40, 40
+cebolinha = pygame.Surface((altura, largura))
+cebolinha.fill("#f2e18d")
+
+dead_cebolinhas = 0
+vida_monica = 3
+
+# FUNÇÃO QUE MOVIMENTA OS CEBOLINHAS:
+def obstacle_movement(lista, shoots, shootsR):
+    """ 
+    A função movimenta os cebolinhas e os elimina quando chegam à rua.
+    :param list: lista com os retângulos dos cebolinhas.
+    :returns: a lista com os cebolinhas updatados.
+    """
+    # ?eu nn sei se precisa de tanto global :/?
+    global largura
+    global cebolinha
+    global direita
+    global esquerda
+    global dead_cebolinhas 
+    global vida_monica
+    global timer
+    if lista:
+        for obstaculo in lista:
+            if obstaculo.left == esquerda or obstaculo.right == direita:
+                lista.remove(obstaculo)
+                vida_monica -= 1
+                print("VIDA:", vida_monica)
+                
+            if esquerda < obstaculo.left <= WIDTH:
+                obstaculo.x -= 1
+            elif obstaculo.right < direita:
+                obstaculo.x += 1
+
+            for shoot in shoots:
+                if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
+                    dead_cebolinhas += 1
+                    timer -= 100
+                    print("CEBOLINHAS:", dead_cebolinhas)
                     lista.remove(obstaculo)
-                else:
-                    if self.esquerda < obstaculo.left <= settings.WIDTH:
-                        obstaculo.x -= 5
-                    elif obstaculo.right < self.direita:
-                        obstaculo.x += 5
+                    shoots.remove(shoot)
+            
+            for shoot in shootsR:
+                if (shoot.x > obstaculo.x and shoot.x < obstaculo.x + 40 and 
+                    shoot.y > obstaculo.y - 60 and shoot.y < obstaculo.y):
+                    dead_cebolinhas += 1
+                    print("CEBOLINHAS:", dead_cebolinhas)
+                    shootsR.remove(shoot)
+                    lista.remove(obstaculo)
 
-                self.screen.blit(self.draw(), obstaculo)
-            return lista
-        else:
-            return []
-          
+            screen.blit(cebolinha, obstaculo)
+        return lista
+    else:
+        return []
