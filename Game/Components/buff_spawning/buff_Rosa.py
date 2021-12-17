@@ -59,7 +59,7 @@ cebolinha.fill("#f2e18d")
 
 times = 0
 bufff = False
-buff2 = False
+bufff2 = False
 
 # FUNÇÃO QUE MOVIMENTA OS CEBOLINHAS:
 
@@ -108,20 +108,22 @@ while True:
                 midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
             buff_2_rect = buff_2_screen.get_rect(
                 midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
-            if times != 0 and times % 5 == 0:
-                buff2 = True
+            if times != 0 and times % 3 == 0:
+                bufff2 = True
+            else:
+                bufff2 = False
             if times % 2 == 0:
                 bufff = True
             else:
                 bufff = False
-                bufff2 = False
             times += 1
 
     screen.blit(background, (0, 0))
     if bufff == True:
         screen.blit(buff_screen, buff_rect)
-    if buff2 == True:
+    if bufff2 == True:
         screen.blit(buff_2_screen, buff_2_rect)
+
     # RUNNING THE SPAWN
     # aqui ele vai robar o blit dos cebolinhas, ent vai ter movimento
     # e vai updatar a obstacle_rect_list
