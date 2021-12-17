@@ -35,7 +35,7 @@ cebolinha_timer = pygame.event.custom_type()
 pygame.time.set_timer(cebolinha_timer, RANGE_TIMER*1000)
 
 buff_timer = pygame.event.custom_type()
-pygame.time.set_timer(buff_timer, 2000)
+pygame.time.set_timer(buff_timer, 5000)
 
 buff_list = []
 buff_screen = pygame.Surface((40, 40))
@@ -60,6 +60,11 @@ cebolinha.fill("#f2e18d")
 times = 0
 bufff = False
 bufff2 = False
+
+buff_rect = buff_screen.get_rect(midbottom=(
+    WIDTH/2, random.randint(altura+92, HEIGHT)))
+buff_2_rect = buff_2_screen.get_rect(midbottom=(
+    WIDTH/2, random.randint(altura+92, HEIGHT)))
 
 # FUNÇÃO QUE MOVIMENTA OS CEBOLINHAS:
 
@@ -104,14 +109,11 @@ while True:
             obstacle_rect_list.append(cebolinha.get_rect(
                 midbottom=(random.choice([-(0.5*largura), WIDTH+(0.5*largura)]), random.randint(altura, HEIGHT))))
         if event.type == buff_timer:  # AND THE GAME IS ACTIVE
-            buff_rect = buff_screen.get_rect(
-                midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
-            buff_2_rect = buff_2_screen.get_rect(
-                midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
             if times != 0 and times % 3 == 0:
                 bufff2 = True
             else:
                 bufff2 = False
+
             if times % 2 == 0:
                 bufff = True
             else:
