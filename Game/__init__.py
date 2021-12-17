@@ -23,7 +23,7 @@ class GameLoop:
 
     def __init__(self):
         '''Initialize game window.'''
-        
+
         pg.init()
 
         screenDim = (settings.WIDTH, settings.HEIGHT)
@@ -32,7 +32,7 @@ class GameLoop:
         self.running = False
 
         pg.display.set_caption(settings.TITLE)
-    
+
     def update(self):
         '''Game update rule and components method.'''
         pass
@@ -44,18 +44,19 @@ class GameLoop:
 
         for _ in range(settings.WIDTH):
             x += settings.GRIDWIDTH
-            pg.draw.line(self.screen, settings.GRIDCOLOR, (x, 0), (x, settings.HEIGHT))
+            pg.draw.line(self.screen, settings.GRIDCOLOR,
+                         (x, 0), (x, settings.HEIGHT))
 
         for _ in range(settings.HEIGHT):
             y += settings.GRIDHEIGHT
-            pg.draw.line(self.screen, settings.GRIDCOLOR, (0, y), (settings.WIDTH, y))
+            pg.draw.line(self.screen, settings.GRIDCOLOR,
+                         (0, y), (settings.WIDTH, y))
 
-    def draw(self, player, scene, shoots, shootsR, grid_on=False): 
+    def draw(self, player, scene, shoots, shootsR, grid_on=False):
         '''Game draw method.'''
 
         # Game Loop Background reset
         scene.draw()
-
 
         # Draw a grid on game (DEBUG FUNCTION)
         if grid_on:
@@ -71,27 +72,26 @@ class GameLoop:
         for shoot in shootsR:
             shoot.draw_right()
 
-
-    def quit(self): 
+    def quit(self):
         '''Game quit method.'''
 
         print('shuting down...')
         pg.quit()
         exit()
-    
-    def events(self, player, obstacles, shoots, shootsR): 
+
+    def events(self, player, obstacles, shoots, shootsR):
         '''Game events method.'''
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            
+
             # cebolinha
             if event.type == cebolinha.obstacle_timer:  # AND THE GAME IS ACTIVE
                 obstacles.append(cebolinha.cebolinha.get_rect(
                     midbottom=(
-                        random.choice([-(0.5*cebolinha.largura), cebolinha.WIDTH+(0.5*cebolinha.largura)]), random.randint(cebolinha.altura, cebolinha.HEIGHT)))
-                    )
+                        random.choice([-(0.5*cebolinha.largura), cebolinha.WIDTH+(0.5*cebolinha.largura)]), random.randint(cebolinha.altura+92, cebolinha.HEIGHT)))
+                )
 
             # shoot
             if event.type == pg.KEYDOWN and event.key == pg.K_a and player.player_left:
@@ -100,14 +100,13 @@ class GameLoop:
                 shootsR.append(monica.Bullet(self.screen, player.x, player.y))
 
             player.control()
-        
 
     def run(self):
         '''Game loop method.'''
 
         self.running = True
         clock = pg.time.Clock()
-        
+
         player = monica.Hero(self.screen, 375, 275)
         scenery = background.Background(self.screen)
 
@@ -124,7 +123,6 @@ class GameLoop:
 
             self.events(player, teste, shoots, shootsR)
             self.draw(player, scenery, shoots, shootsR, grid_on=False)
-            
 
             teste = cebolinha.obstacle_movement(teste, shoots, shootsR)
             self.update()

@@ -40,6 +40,8 @@ pygame.time.set_timer(buff_timer, 2000)
 buff_list = []
 buff_screen = pygame.Surface((40, 40))
 buff_screen.fill("#9ec4e8")
+buff_2_screen = pygame.Surface((40, 40))
+buff_2_screen.fill("Red")
 
 # OBSTACLE LIST:
 obstacle_rect_list = []
@@ -57,6 +59,7 @@ cebolinha.fill("#f2e18d")
 
 times = 0
 bufff = False
+buff2 = False
 
 # FUNÇÃO QUE MOVIMENTA OS CEBOLINHAS:
 
@@ -103,15 +106,22 @@ while True:
         if event.type == buff_timer:  # AND THE GAME IS ACTIVE
             buff_rect = buff_screen.get_rect(
                 midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
+            buff_2_rect = buff_2_screen.get_rect(
+                midbottom=(WIDTH/2, random.randint(altura, HEIGHT)))
+            if times != 0 and times % 5 == 0:
+                buff2 = True
             if times % 2 == 0:
                 bufff = True
             else:
                 bufff = False
+                bufff2 = False
             times += 1
 
     screen.blit(background, (0, 0))
     if bufff == True:
         screen.blit(buff_screen, buff_rect)
+    if buff2 == True:
+        screen.blit(buff_2_screen, buff_2_rect)
     # RUNNING THE SPAWN
     # aqui ele vai robar o blit dos cebolinhas, ent vai ter movimento
     # e vai updatar a obstacle_rect_list
