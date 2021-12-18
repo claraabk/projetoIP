@@ -1,9 +1,8 @@
 import pygame as pg
-import os
 
 
-class Hero:
-    def __init__(self, win, x, y):
+class Hero():
+    def __init__(self, win, y):
         self.win = win
         self.x = 355
         self.y = y
@@ -24,7 +23,6 @@ class Hero:
 
         self.player_left = True
         self.player_right = True
-
 
     def control(self):
         keys = pg.key.get_pressed()
@@ -56,7 +54,7 @@ class Hero:
         self.win.blit(self.default_monica,(self.x,self.y))
 
 
-class Bullet:
+class Bullet():
     def __init__(self, win, x, y):
         self.win = win
         self.x = x
@@ -67,11 +65,10 @@ class Bullet:
         self.sansao_to_left = pg.image.load('Game\Assets\sansao_to_left.png')
         self.sansao_to_left = pg.transform.scale(self.sansao_to_left,(50,50))
 
-
     def draw_right(self):
         self.win.blit(self.sansao_to_right, (self.x+50, self.y+30))
-        self.x += 20
+        self.x += 10
 
     def draw_left(self):
         self.win.blit(self.sansao_to_left, (self.x-10, self.y+20))
-        self.x -= 20
+        self.x -= 10

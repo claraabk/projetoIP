@@ -13,7 +13,7 @@ import pygame as pg
 from Game import settings
 from Game.Components import monica
 from Game.Components import background
-from Game.Components import cebolinha
+from Game.Components import dynamics
 
 
 class GameLoop:
@@ -34,6 +34,12 @@ class GameLoop:
         self.player = monica.Hero(self.screen, y=275)
         self.scenery = background.Background(self.screen)
 
+        self.shootsL = []
+        self.shootsR = []
+
+        self.challenge = dynamics.Challenge(self.screen)
+        self.enemies = self.challenge.obstacle_rect_list
+
         pg.display.set_caption(settings.TITLE)
 
     def quit(self): 
@@ -43,29 +49,37 @@ class GameLoop:
         pg.quit()
         exit()
 
-    def events(self, player, obstacles, bullet, shoots, shootsR): 
+    def events(self, player, obstacles, obstacle_timer, bullet, shoots_left, shoots_right): 
         '''Game events method.'''
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            
-            # cebolinha
-            if event.type == cebolinha.obstacle_timer:  # AND THE GAME IS ACTIVE
-                obstacles.append(cebolinha.cebolinha.get_rect(
-                    midbottom=(
-                        random.choice([-(0.5*cebolinha.largura), cebolinha.WIDTH+(0.5*cebolinha.largura)]), random.randint(cebolinha.altura, cebolinha.HEIGHT)))
+
+            # Challenge
+            if event.type == obstacle_timer:
+                obstacles.append(
+                    self.challenge.cebolinha.get_rect(
+                        midbottom=(
+                            random.choice(
+                                [-(0.5 * self.challenge.width), settings.WIDTH + (0.5 * self.challenge.width)]
+                            ),
+                            random.randint(
+                                self.challenge.height, settings.HEIGHT
+                            )
+                        )
                     )
+                )
 
             # shoot
             if event.type == pg.KEYDOWN and event.key == pg.K_a and player.player_left:
-                shoots.append(bullet)
+                shoots_left.append(bullet)
             if event.type == pg.KEYDOWN and event.key == pg.K_d and player.player_right:
-                shootsR.append(bullet)
+                shoots_right.append(bullet)
 
             player.control()
 
-    def draw(self, player, scene, shoots, shootsR): 
+    def draw(self, player, scene, shoots_left, shoots_right): 
         '''Game draw method.'''
 
         # Game Loop Background reset
@@ -75,11 +89,25 @@ class GameLoop:
         player.draw()
 
         # Draw bullets
-        for shoot in shoots:
+        for shoot in shoots_left:
             shoot.draw_left()
 
-        for shoot in shootsR:
+        for shoot in shoots_right:
             shoot.draw_right()
+        
+        # Draw Monica Hearts Effect
+        if self.challenge.life_monica == 3 :
+            self.screen.blit(self.challenge.three_hearts,(650,-12))
+        elif self.challenge.life_monica == 2 :
+            self.screen.blit(self.challenge.two_hearts,(650,-12))
+        elif self.challenge.life_monica == 1 :
+            self.screen.blit(self.challenge.one_heart,(650,-12))
+        
+        # Draw score
+        pg.font.init()
+        myfont = pg.font.SysFont('Comic Sans MS', 28)
+        textsurface = myfont.render(str(self.challenge.dead_cebolinhas), False, (0, 0, 0))
+        self.screen.blit(textsurface,(620,4))
 
     def run(self):
         '''Game loop method.'''
@@ -87,24 +115,28 @@ class GameLoop:
         self.running = True
         clock = pg.time.Clock()
 
-        shoots = []
-        shootsR = []
-
-        obstacle_timer = pg.USEREVENT + 1
+        obstacle_timer = pg.event.custom_type()
         pg.time.set_timer(obstacle_timer, 1400)
-
-        enemies = cebolinha.obstacle_rect_list
 
         # Game loop
         while self.running:
 
             projectile = monica.Bullet(self.screen, self.player.x, self.player.y)
 
-            self.events(self.player, enemies, projectile, shoots, shootsR)
-            self.draw(self.player, self.scenery, shoots, shootsR)
+            self.events(
+                self.player, self.enemies, 
+                obstacle_timer, projectile, 
+                self.shootsL, self.shootsR
+            )
 
-            enemies = cebolinha.obstacle_movement(enemies, shoots, shootsR)
+            self.draw(
+                self.player, self.scenery, 
+                self.shootsL, self.shootsR
+            )
 
-            pg.display.update()
+            self.challenge.load_rules(self.enemies, self.shootsL, self.shootsR)
+            self.enemies = self.challenge.obstacle_rect_list
+
+            pg.display.flip()
 
             clock.tick(settings.FPS)
