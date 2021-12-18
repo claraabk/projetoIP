@@ -20,10 +20,10 @@ pygame.display.set_caption("Background")
 clock = pygame.time.Clock()
 
 # criando as surfaces:
-highway = pygame.image.load("Game\Components\media\highway.png")
+highway = pygame.image.load("Game\Assets\highway.png")
 highway = pygame.transform.scale(highway, (120, 600))
 highway_rect = highway.get_rect(center=(400, 300))
-grass = pygame.image.load("Game\Components\media\grass.png")
+grass = pygame.image.load("Game\Assets\grass.png")
 grass = pygame.transform.scale(grass, (WIDTH, HEIGHT))
 
 # TIMER:
@@ -37,16 +37,16 @@ obstacle_rect_list = []
 # CEBOLINHA SURFACE:
 altura, largura = 40, 40
 
-cebolinha_from_right = pygame.image.load('Game\Components\media\cebolinha_from_right.png')
+cebolinha_from_right = pygame.image.load('Game\Assets\cebolinha_from_right.png')
 cebolinha_from_right = pygame.transform.scale(cebolinha_from_right,(82,90))
-cebolinha_from_left = pygame.image.load('Game\Components\media\cebolinha_from_left.png')
+cebolinha_from_left = pygame.image.load('Game\Assets\cebolinha_from_left.png')
 cebolinha_from_left = pygame.transform.scale(cebolinha_from_left,(90,90))
 
-three_hearts = pygame.image.load('Game\Components\media\hree_hearts.png')
+three_hearts = pygame.image.load('Game\Assets\hree_hearts.png')
 three_hearts = pygame.transform.scale(three_hearts,(200,70))
-two_hearts = pygame.image.load('Game\Components\media\wo_hearts.png')
+two_hearts = pygame.image.load('Game\Assets\wo_hearts.png')
 two_hearts = pygame.transform.scale(two_hearts,(200,70))
-one_heart = pygame.image.load('Game\Components\media\one_heart.png')
+one_heart = pygame.image.load('Game\Assets\one_heart.png')
 one_heart = pygame.transform.scale(one_heart,(200,70))
 
 

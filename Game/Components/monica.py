@@ -14,10 +14,10 @@ class Hero:
         self.heigt = 50
         self.vel = 15
 
-        self.monica_to_right = pg.image.load('Game\Components\media\monica_to_right.png')
+        self.monica_to_right = pg.image.load('Game\Assets\monica_to_right.png')
         self.monica_to_right = pg.transform.scale(self.monica_to_right,(110,97))
 
-        self.monica_to_left = pg.image.load('Game\Components\media\monica_to_left.png')
+        self.monica_to_left = pg.image.load('Game\Assets\monica_to_left.png')
         self.monica_to_left = pg.transform.scale(self.monica_to_left,(110,97))
 
         self.default_monica = self.monica_to_right
@@ -62,9 +62,9 @@ class Bullet:
         self.x = x
         self.y = y
 
-        self.sansao_to_right = pg.image.load('Game\Components\media\sansao_to_right.png')
+        self.sansao_to_right = pg.image.load('Game\Assets\sansao_to_right.png')
         self.sansao_to_right = pg.transform.scale(self.sansao_to_right,(50,50))
-        self.sansao_to_left = pg.image.load('Game\Components\media\sansao_to_left.png')
+        self.sansao_to_left = pg.image.load('Game\Assets\sansao_to_left.png')
         self.sansao_to_left = pg.transform.scale(self.sansao_to_left,(50,50))
 
 
