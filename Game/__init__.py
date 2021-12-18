@@ -14,6 +14,7 @@ from Game import settings
 from Game.Components import monica
 from Game.Components import background
 from Game.Components import cebolinha
+from Game.Components.buff_spawning import buffs_Rr
 
 
 class GameLoop:
@@ -79,7 +80,11 @@ class GameLoop:
         pg.quit()
         exit()
 
+<<<<<<< Updated upstream
     def events(self, player, obstacles, shoots, shootsR):
+=======
+    def events(self, player, obstacles, shoots, shootsR, buff_timer):
+>>>>>>> Stashed changes
         '''Game events method.'''
 
         for event in pg.event.get():
@@ -92,6 +97,21 @@ class GameLoop:
                     midbottom=(
                         random.choice([-(0.5*cebolinha.largura), cebolinha.WIDTH+(0.5*cebolinha.largura)]), random.randint(cebolinha.altura+92, cebolinha.HEIGHT)))
                 )
+<<<<<<< Updated upstream
+=======
+
+            if event.type == buff_timer:  # AND THE GAME IS ACTIVE
+                if buffs_Rr.times != 0 and buffs_Rr.times % 3 == 0:
+                    buffs_Rr.bufff2 = True
+                else:
+                    buffs_Rr.bufff2 = False
+
+                if buffs_Rr.times % 2 == 0:
+                    buffs_Rr.bufff = True
+                else:
+                    buffs_Rr.bufff = False
+                buffs_Rr.times += 1
+>>>>>>> Stashed changes
 
             # shoot
             if event.type == pg.KEYDOWN and event.key == pg.K_a and player.player_left:
@@ -113,18 +133,31 @@ class GameLoop:
         shoots = []
         shootsR = []
 
-        obstacle_timer = pg.USEREVENT + 1
+        obstacle_timer = pg.event.custom_type()
         pg.time.set_timer(obstacle_timer, 1400)
+
+        buff_timer = pg.event.custom_type()
+        pg.time.set_timer(buff_timer, 5000)
 
         teste = cebolinha.obstacle_rect_list
 
         # Game loop
         while self.running:
 
-            self.events(player, teste, shoots, shootsR)
+            self.events(player, teste, shoots, shootsR, buff_timer)
             self.draw(player, scenery, shoots, shootsR, grid_on=False)
 
             teste = cebolinha.obstacle_movement(teste, shoots, shootsR)
+
+            # tentando fazer a colisão (com um dos tipos de buff)
+            # bug: ele faz a colisão com o buff antes mesmo dele aparecer na tela (deve ser por causa da lógica do retângulo)
+            if buffs_Rr.buff_rect.collidepoint((player.x+55, player.y)) or buffs_Rr.buff_rect.collidepoint((player.x+55, player.y+97)):
+                print("Colidiu!")
+            # printando os buffs na tela
+            if buffs_Rr.bufff == True:
+                self.screen.blit(buffs_Rr.buff_screen, buffs_Rr.buff_rect)
+            if buffs_Rr.bufff2 == True:
+                self.screen.blit(buffs_Rr.buff_2_screen, buffs_Rr.buff_2_rect)
             self.update()
             pg.display.update()
             clock.tick(settings.FPS)

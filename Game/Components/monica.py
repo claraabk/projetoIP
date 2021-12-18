@@ -14,17 +14,20 @@ class Hero:
         self.heigt = 50
         self.vel = 15
 
-        self.monica_to_right = pg.image.load('Game\Components\media\monica_to_right.png')
-        self.monica_to_right = pg.transform.scale(self.monica_to_right,(110,97))
+        self.monica_to_right = pg.image.load(
+            'Game\Components\media\monica_to_right.png')
+        self.monica_to_right = pg.transform.scale(
+            self.monica_to_right, (110, 97))
 
-        self.monica_to_left = pg.image.load('Game\Components\media\monica_to_left.png')
-        self.monica_to_left = pg.transform.scale(self.monica_to_left,(110,97))
+        self.monica_to_left = pg.image.load(
+            'Game\Components\media\monica_to_left.png')
+        self.monica_to_left = pg.transform.scale(
+            self.monica_to_left, (110, 97))
 
         self.default_monica = self.monica_to_right
 
         self.player_left = True
         self.player_right = True
-
 
     def control(self):
         keys = pg.key.get_pressed()
@@ -41,19 +44,19 @@ class Hero:
 
         keys = pg.key.get_pressed()
 
-        if keys[pg.K_a]: 
+        if keys[pg.K_a]:
             self.default_monica = self.monica_to_left
             self.x = 320
             self.player_right = False
             self.player_left = True
 
-        elif keys[pg.K_d] :
+        elif keys[pg.K_d]:
             self.default_monica = self.monica_to_right
             self.x = 355
             self.player_left = False
             self.player_right = True
 
-        self.win.blit(self.default_monica,(self.x,self.y))
+        self.win.blit(self.default_monica, (self.x, self.y))
 
 
 class Bullet:
@@ -62,11 +65,13 @@ class Bullet:
         self.x = x
         self.y = y
 
-        self.sansao_to_right = pg.image.load('Game\Components\media\sansao_to_right.png')
-        self.sansao_to_right = pg.transform.scale(self.sansao_to_right,(50,50))
-        self.sansao_to_left = pg.image.load('Game\Components\media\sansao_to_left.png')
-        self.sansao_to_left = pg.transform.scale(self.sansao_to_left,(50,50))
-
+        self.sansao_to_right = pg.image.load(
+            'Game\Components\media\sansao_to_right.png')
+        self.sansao_to_right = pg.transform.scale(
+            self.sansao_to_right, (50, 50))
+        self.sansao_to_left = pg.image.load(
+            'Game\Components\media\sansao_to_left.png')
+        self.sansao_to_left = pg.transform.scale(self.sansao_to_left, (50, 50))
 
     def draw_right(self):
         self.win.blit(self.sansao_to_right, (self.x+50, self.y+30))
