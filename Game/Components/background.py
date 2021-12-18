@@ -9,7 +9,7 @@ class Background():
 
     pygame.display.set_caption("Background")
 
-    highway = pygame.image.load("Game\Assets\highway.png")
+    highway = pygame.image.load('Game\Assets\highway.png')
     highway = pygame.transform.scale(highway, (120, 600))
     highway_rect = highway.get_rect(center=(400, 300))
 

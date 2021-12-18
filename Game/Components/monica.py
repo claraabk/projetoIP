@@ -2,10 +2,10 @@ import pygame as pg
 
 
 class Hero():
-    def __init__(self, win, y):
+    def __init__(self, win):
         self.win = win
         self.x = 355
-        self.y = y
+        self.y = 275
 
         self.first = True
 
@@ -20,6 +20,7 @@ class Hero():
         self.monica_to_left = pg.transform.scale(self.monica_to_left,(110,97))
 
         self.default_monica = self.monica_to_right
+        self.player_rect = self.default_monica.get_rect()
 
         self.player_left = True
         self.player_right = True
