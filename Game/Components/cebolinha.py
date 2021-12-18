@@ -101,6 +101,14 @@ def obstacle_movement(lista, shoots, shootsR):
                     print("CEBOLINHAS:", dead_cebolinhas)
                     shootsR.remove(shoot)
                     lista.remove(obstaculo)
+            
+            pygame.font.init()
+
+            myfont = pygame.font.SysFont('Comic Sans MS', 28)
+
+            textsurface = myfont.render(str(dead_cebolinhas), False, (0, 0, 0))
+
+            screen.blit(textsurface,(620,4))
 
             screen.blit(cebolinha, obstaculo)
 
