@@ -26,4 +26,3 @@ class Buff():
         self.buff_rect = buff_image.get_rect()
 
         self.screen.blit(buff_image,(self.x,self.y))
-
