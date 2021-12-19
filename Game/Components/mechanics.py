@@ -1,3 +1,12 @@
+'''
+December 2021
+Add the major Challenge and rules of game.
+IP Project  - Dono da Lua
+
+@authors: Roseane Oliverira, Clara Kenderessy, Matheus Silva, Samuel Marsaro
+'''
+
+
 import pygame as pg
 from Game import settings
 
@@ -40,8 +49,8 @@ class Challenge():
                 if obstacle.left == self.left or obstacle.right == self.right:
                     obstacles.remove(obstacle)
                     self.life_monica -= 1
-                    print("VIDA:", self.life_monica)
                     sound_effect = pg.mixer.Sound('Game\Sounds\Menu1B.wav')
+                    sound_effect.set_volume(0.05)
                     sound_effect.play()
             
                 if self.left < obstacle.left <= settings.WIDTH:
@@ -56,22 +65,22 @@ class Challenge():
                         if (shoot.x > obstacle.x and shoot.x < obstacle.x + 40 and 
                             shoot.y > obstacle.y - 60 and shoot.y < obstacle.y + 40):
                             self.dead_cebolinhas += 1
-                            print("CEBOLINHAS:", self.dead_cebolinhas)
                             obstacles.remove(obstacle)
                             shoots_left.remove(shoot)
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\collision.flac')
+                            sound_effect.set_volume(0.05)
                             sound_effect.play()
                     
                     for shoot in shoots_right:
                         if (shoot.x > obstacle.x and shoot.x < obstacle.x + 40 and 
                             shoot.y > obstacle.y - 60 and shoot.y < obstacle.y + 40):
                             self.dead_cebolinhas += 1
-                            print("CEBOLINHAS:", self.dead_cebolinhas)
                             shoots_right.remove(shoot)
                             obstacles.remove(obstacle)
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\collision.flac')
+                            sound_effect.set_volume(0.05)
                             sound_effect.play()
 
                 self.screen.blit(self.cebolinha, obstacle)

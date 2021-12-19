@@ -1,3 +1,11 @@
+'''
+December 2021
+Add Hero class and Bullet class to the game.
+IP Project  - Dono da Lua
+
+@authors: Samuel Marsaro, Clara Kenderessy
+'''
+
 import pygame as pg
 
 
