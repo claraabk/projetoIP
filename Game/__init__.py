@@ -8,6 +8,7 @@ from random import randint, choice
 
 # Site-packages
 import pygame as pg
+from pygame import key
 
 # Locals
 from Game import settings
@@ -46,6 +47,10 @@ class GameLoop:
 
         self.monica_life = self.challenge.life_monica
         self.score = self.challenge.dead_cebolinhas
+
+        self.gameover = False
+        self.gameon = False
+
 
         pg.mixer.music.load('Game\Sounds\Dancing_on_the_Street_NES.wav')
         pg.mixer.music.play(-1)
@@ -101,84 +106,127 @@ class GameLoop:
     def draw(self, player, scene, shoots_left, shoots_right): 
         '''Game draw method.'''
 
+        if not self.gameon :
+            menu = pg.image.load('Game\Assets\menu_background.jpeg')
+            menu = pg.transform.scale(menu,(800,600))
+
+            self.enemies = False
+
+            self.screen.blit(menu,(0,0))
+
+            keys = pg.key.get_pressed()
+
+            if keys[pg.K_RETURN]:
+                self.gameon = True
+        else :
         # Game Loop Background reset
-        scene.draw()
+            scene.draw()
 
-        # Draw Monica
-        player.draw()
+            # Draw Monica
+            player.draw()
 
-        # Draw bullets
-        if len(shoots_left)>=1 or len(shoots_right)>=1:
-            for shoot in shoots_left:
-                shoot.draw_left()
+            # Draw bullets
+            if len(shoots_left)>=1 or len(shoots_right)>=1:
+                for shoot in shoots_left:
+                    shoot.draw_left()
 
-            for shoot in shoots_right:
-                shoot.draw_right()
-        
-        # Draw Monica Hearts Effect
-        if self.challenge.life_monica > 3:
-            self.challenge.life_monica = 3
+                for shoot in shoots_right:
+                    shoot.draw_right()
+            
+            # Draw Monica Hearts Effect
+            if self.challenge.life_monica > 3:
+                self.challenge.life_monica = 3
 
-        if self.challenge.life_monica == 3 :
-            self.screen.blit(self.challenge.three_hearts,(650, -12))
-        elif self.challenge.life_monica == 2 :
-            self.screen.blit(self.challenge.two_hearts,(650, -12))
-        elif self.challenge.life_monica == 1 :
-            self.screen.blit(self.challenge.one_heart,(650, -12))
-        
-        # Draw score
-        pg.font.init()
-        myfont = pg.font.SysFont('Comic Sans MS', 28)
+            if self.challenge.life_monica == 3 :
+                self.screen.blit(self.challenge.three_hearts,(650, -12))
+            elif self.challenge.life_monica == 2 :
+                self.screen.blit(self.challenge.two_hearts,(650, -12))
+            elif self.challenge.life_monica == 1 :
+                self.screen.blit(self.challenge.one_heart,(650, -12))
+            elif self.challenge.life_monica == 0 :
 
-        textscore = myfont.render(str(self.challenge.dead_cebolinhas), False, (0, 0, 0))
-        self.screen.blit(textscore,(600,4))
-
-        textbuff = myfont.render(str(self.count_buff), False, (0, 0, 0))
-        self.screen.blit(textbuff,(460,4))
-
-        # Draw buff
-        if self.challenge.dead_cebolinhas > 25:
-            self.buff.draw()
-
-            player_rect = pg.Rect(player.x, player.y, 40, 40)
-            buff_rect = pg.Rect(self.buff.x, self.buff.y, 40, 40)
-
-            if buff_rect.colliderect(player_rect):
+                pg.mixer.music.stop()
                 
-                if self.buff.effect == 0:
-                    self.challenge.life_monica += 1
-                    player.vel = 15
+                gameover_sound = pg.mixer.Sound('')
+                gameover_sound.play()
 
-                    sound_effect = pg.mixer.Sound('Game\Sounds\Menu1A.wav')
-                    sound_effect.play()
-                elif  self.buff.effect == 2 or self.buff.effect == 4:
-                    self.count_buff += 1
-                    player.vel += 0.5
+                self.gameover = True
+                self.enemies = False
+                
+                background = pg.image.load('Game\Assets\gameover_screen.jpg')
+                background = pg.transform.scale(background,(800,600))
 
-                    sound_effect = pg.mixer.Sound('Game\Sounds\Item1A.wav')
-                    sound_effect.play()
-                else:
-                    if player.vel >= 15:
-                        player.vel -= 4
-                    else:
-                        player.vel -= 0.2
+                self.screen.blit(background,(0,0))
 
-                    sound_effect = pg.mixer.Sound('Game\Sounds\Item1B.wav')
-                    sound_effect.play()
+                keys = pg.key.get_pressed()
+
+                if keys[pg.K_SPACE]:
+                    self.gameover = False
+                    self.enemies = self.challenge.obstacle_rect_list
+                    self.challenge.dead_cebolinhas = 0 
+                    self.count_buff = 0
+                    self.challenge.life_monica = 3
+                    self.player.vel = 15
+                    self.scenery.draw()
+                    pg.mixer.music.load('Game\Sounds\Dancing_on_the_Street_NES.wav')
+                    pg.mixer.music.play(-1)
+
+                pg.display.update()
+            
+            # Draw score
+            if not self.gameover:
+                pg.font.init()
+                myfont = pg.font.SysFont('Comic Sans MS', 28)
+
+                textscore = myfont.render(str(self.challenge.dead_cebolinhas), False, (0, 0, 0))
+                self.screen.blit(textscore,(600,4))
+
+                textbuff = myfont.render(str(self.count_buff), False, (0, 0, 0))
+                self.screen.blit(textbuff,(460,4))
+
+                # Draw buff
+                if self.challenge.dead_cebolinhas > 25:
+                    self.buff.draw()
+
+                    player_rect = pg.Rect(player.x, player.y, 40, 40)
+                    buff_rect = pg.Rect(self.buff.x, self.buff.y, 40, 40)
+
+                    if buff_rect.colliderect(player_rect):
                     
-                if player.vel >= 20:
-                    player.vel = 20
-                
-                if player.vel <= 3:
-                    player.vel = 3
-                
-                self.buff.x = 1000
-                self.buff.y = 1000  
+                        if self.buff.effect == 0:
+                            self.challenge.life_monica += 1
+                            player.vel = 15
+
+                            sound_effect = pg.mixer.Sound('Game\Sounds\Menu1A.wav')
+                            sound_effect.play()
+                        elif  self.buff.effect == 2 or self.buff.effect == 4:
+                            self.count_buff += 1
+                            player.vel += 0.5
+
+                            sound_effect = pg.mixer.Sound('Game\Sounds\Item1A.wav')
+                            sound_effect.play()
+                        else:
+                            if player.vel >= 15:
+                                player.vel -= 4
+                            else:
+                                player.vel -= 0.2
+
+                            sound_effect = pg.mixer.Sound('Game\Sounds\Item1B.wav')
+                            sound_effect.play()
+                        
+                        if player.vel >= 20:
+                            player.vel = 20
+                    
+                        if player.vel <= 3:
+                            player.vel = 3
+                    
+                        self.buff.x = 1000
+                        self.buff.y = 1000  
 
     def run(self):
         '''Game loop method.'''
-
         self.running = True
+
         clock = pg.time.Clock()
 
         obstacle_timer = pg.event.custom_type()
@@ -187,7 +235,6 @@ class GameLoop:
         buff_timer = pg.event.custom_type()
         pg.time.set_timer(buff_timer, 5000)
 
-        # Game loop
         while self.running:
 
             projectile = monica.Bullet(self.screen, self.player.x, self.player.y)
@@ -200,9 +247,9 @@ class GameLoop:
             )
 
             self.draw(
-                self.player, self.scenery, 
-                self.shootsL, self.shootsR
-            )
+                        self.player, self.scenery, 
+                        self.shootsL, self.shootsR
+                    )
 
             self.challenge.load_rules(self.enemies, self.shootsL, self.shootsR)
             self.enemies = self.challenge.obstacle_rect_list
