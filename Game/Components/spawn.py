@@ -11,7 +11,7 @@ import pygame as pg
 from Game import settings
 
 
-class Challenge():
+class SpawnCebolinha():
 
     def __init__(self, screen):
         self.screen = screen

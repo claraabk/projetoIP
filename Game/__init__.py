@@ -18,9 +18,9 @@ import pygame as pg
 
 # Locals
 from Game import settings
-from Game.Components import monica
+from Game.Components import gamester
 from Game.Components import background
-from Game.Components import mechanics
+from Game.Components import spawn
 from Game.Components import powerup
 
 
@@ -39,7 +39,7 @@ class GameLoop:
         self.screen = pg.display.set_mode(screen_dimesion)
         self.running = False
 
-        self.player = monica.Hero(self.screen)
+        self.player = gamester.Hero(self.screen)
         self.scenery = background.Background(self.screen)
         self.buff = powerup.Buff(self.screen)
 
@@ -51,7 +51,7 @@ class GameLoop:
         self.shootsL = []
         self.shootsR = []
 
-        self.challenge = mechanics.Challenge(self.screen)
+        self.challenge = spawn.SpawnCebolinha(self.screen)
         self.enemies = self.challenge.obstacle_rect_list
 
         self.monica_life = self.challenge.life_monica
@@ -85,10 +85,11 @@ class GameLoop:
         '''Game events method.'''
 
         for event in pg.event.get():
-            if event.type == pg.QUIT or event.type == pg.KEYDOWN:
+            if event.type == pg.QUIT:
+                self.quit()
+            if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
-                self.quit()
 
             # Cebolinhas creation
             if event.type == obstacle_timer:
@@ -234,7 +235,7 @@ class GameLoop:
         # Game loop
         while self.running:
 
-            projectile = monica.Bullet(self.screen, self.player.x, self.player.y)
+            projectile = gamester.Bullet(self.screen, self.player.x, self.player.y)
 
             self.events(
                 self.player, self.enemies, 
