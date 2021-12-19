@@ -3,7 +3,7 @@ Settings: all game settings.
 '''
 
 # Game settings
-TITLE = 'DONO DA LUA v1.0.0-beta'
+TITLE = 'DONO DA LUA v1.0.3-beta'
 
 FPS = 60
 WIDTH = 800

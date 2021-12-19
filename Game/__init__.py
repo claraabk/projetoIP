@@ -1,6 +1,13 @@
 '''
+December 2021
 Initialize all game files.
+IP Project  - Dono da Lua
+
+@authors: 
+   Beatriz Férre, Clara Kenderessy, Matheus Silva, 
+   Roseane Oliveira, Rafael Baltar, Samuel Marsaro.
 '''
+
 
 # Native
 from sys import exit
@@ -39,6 +46,9 @@ class GameLoop:
 
         self.count_buff = 0
 
+        self.missed_bullet_r = 1
+        self.missed_bullet_l = 1
+
         self.shootsL = []
         self.shootsR = []
 
@@ -53,6 +63,7 @@ class GameLoop:
 
 
         pg.mixer.music.load('Game\Sounds\Dancing_on_the_Street_NES.wav')
+        pg.mixer.music.set_volume(0.05)
         pg.mixer.music.play(-1)
 
         pg.display.set_caption(settings.TITLE)
@@ -63,42 +74,55 @@ class GameLoop:
         print('shuting down...')
         pg.quit()
         exit()
+    
+    def update(self):
+        '''Game update limit rules.'''
+
+        if self.player.vel > 20:
+            self.player.vel = 20
+            print(f'VEL LIMIT: {self.player.vel}')
+                
+        if self.player.vel < 3:
+            self.player.vel = 3
+            print(f'VEL LIMIT: {self.player.vel}')
 
     def events(self, player, obstacles, obstacle_timer, bullet, shoots_left, shoots_right, buff_timer): 
         '''Game events method.'''
 
         for event in pg.event.get():
-            if event.type == pg.QUIT:
+            if event.type == pg.QUIT or event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.quit()
                 self.quit()
 
-            # Challenge
+            # Cebolinhas creation
             if event.type == obstacle_timer:
                 obstacles.append(
                     self.challenge.cebolinha.get_rect(
                         midbottom=(
                             choice(
-                                [-(0.5 * self.challenge.width), settings.WIDTH + (0.5 * self.challenge.width)]
-                            ),
+                                [-(0.5 * self.challenge.width), 
+                                settings.WIDTH + (0.5 * self.challenge.width)]),
                             randint(
                                 self.challenge.height, settings.HEIGHT
-                            )
-                        )
-                    )
+                            )))
                 )
 
             # shoot
             if event.type == pg.KEYDOWN and event.key == pg.K_a and player.player_left:
                 shoots_left.append(bullet)
                 sound_effect = pg.mixer.Sound('Game\Sounds\sfx_throw.wav')
+                sound_effect.set_volume(0.05)
                 sound_effect.play()
             if event.type == pg.KEYDOWN and event.key == pg.K_d and player.player_right:
                 shoots_right.append(bullet)
                 sound_effect = pg.mixer.Sound('Game\Sounds\sfx_throw.wav')
+                sound_effect.set_volume(0.05)
                 sound_effect.play()
             
             # buff
             if event.type == buff_timer:
-                if randint(0, 1): # Basically True or False with 50% | 50%
+                if randint(0, 1): # Basically True or False with 50% | 50% to drop other buff
                     self.buff = powerup.Buff(self.screen)
 
             player.control() 
@@ -116,6 +140,36 @@ class GameLoop:
 
             keys = pg.key.get_pressed()
 
+            for shoot in shoots_right:
+                shoot.draw_right()
+        
+        # Penality Abusive Samuel Mechanics
+        if len(shoots_left)>= self.missed_bullet_l:
+            player.vel -= 0.5
+            self.missed_bullet_l += 1
+            print(f'VEL DOWN: {player.vel}')
+        
+        if len(shoots_right)>= self.missed_bullet_r:
+            player.vel -= 0.5
+            self.missed_bullet_r += 1 
+            print(f'VEL DOWN: {player.vel}')
+             
+        # Draw Monica Hearts Effect
+        if self.challenge.life_monica > 3:
+            self.challenge.life_monica = 3
+
+        if self.challenge.life_monica == 3 :
+            self.screen.blit(self.challenge.three_hearts,(650, -12))
+        elif self.challenge.life_monica == 2 :
+            self.screen.blit(self.challenge.two_hearts,(650, -12))
+        elif self.challenge.life_monica == 1 :
+            self.screen.blit(self.challenge.one_heart,(650, -12))
+        
+        # Draw score and collected buffs
+        pg.font.init()
+        myfont = pg.font.SysFont('Comic Sans MS', 28)
+
+
             if keys[pg.K_RETURN]:
                 self.gameon = True
         else :
@@ -124,6 +178,7 @@ class GameLoop:
 
             # Draw Monica
             player.draw()
+
 
             # Draw bullets
             if len(shoots_left)>=1 or len(shoots_right)>=1:
@@ -230,7 +285,7 @@ class GameLoop:
         clock = pg.time.Clock()
 
         obstacle_timer = pg.event.custom_type()
-        pg.time.set_timer(obstacle_timer, 1200)
+        pg.time.set_timer(obstacle_timer, 1100)
 
         buff_timer = pg.event.custom_type()
         pg.time.set_timer(buff_timer, 5000)
@@ -250,6 +305,8 @@ class GameLoop:
                         self.player, self.scenery, 
                         self.shootsL, self.shootsR
                     )
+
+            self.update()
 
             self.challenge.load_rules(self.enemies, self.shootsL, self.shootsR)
             self.enemies = self.challenge.obstacle_rect_list

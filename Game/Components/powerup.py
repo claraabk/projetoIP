@@ -1,3 +1,12 @@
+'''
+December 2021
+Add Buff class to the game.
+IP Project  - Dono da Lua
+
+@authors: Beatriz Férre, Rafael Baltar, Roseane Oliveira
+'''
+
+
 from random import randint
 import pygame as pg
 

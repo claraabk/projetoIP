@@ -1,9 +1,14 @@
+'''
+December 2021
+Add Background class to the game.
+IP Project  - Dono da Lua
+
+@authors: Roseane Oliverira, Clara Kenderessy, Matheus Silva
+'''
+
+
 import pygame
 
-from Game import settings 
-#from sys import exit
-
-# width of the street: 120px
 
 class Background():
 
