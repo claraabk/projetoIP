@@ -85,7 +85,9 @@ class GameLoop:
         '''Game events method.'''
 
         for event in pg.event.get():
-            if event.type == pg.QUIT or event.type == pg.K_ESCAPE:
+            if event.type == pg.QUIT or event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.quit()
                 self.quit()
 
             # Cebolinhas creation
@@ -170,7 +172,7 @@ class GameLoop:
         self.screen.blit(textbuff,(460,4))
 
         # Draw buff
-        if self.challenge.dead_cebolinhas > 1:
+        if self.challenge.dead_cebolinhas > 10:
             self.buff.draw()
 
             player_rect = pg.Rect(player.x, player.y, 40, 80)
@@ -224,7 +226,7 @@ class GameLoop:
         clock = pg.time.Clock()
 
         obstacle_timer = pg.event.custom_type()
-        pg.time.set_timer(obstacle_timer, 1200)
+        pg.time.set_timer(obstacle_timer, 1100)
 
         buff_timer = pg.event.custom_type()
         pg.time.set_timer(buff_timer, 5000)
