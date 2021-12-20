@@ -22,11 +22,13 @@
 - Rafael Baltar
 - Roseane Oliveira
 - Samuel Marsaro
+
+## Sinopse
+O Cebolinha aprontou de novo! Dessa vez, o mestre dos planos infalíveis roubou a máquina de clonagem do Franjinha em uma tentativa desesperada de se tornar o dono da rua... Mas a Mônica não vai deixar barato! Com ajuda do Franjinha, nossa golducha favorita clonou seu coelhinho Sansão e fará de tudo para impedir o Cebolinha de roubar seu título. Ande pelo mapa, pegue os power-ups e atire nos Cebolinhas antes que eles alcancem a lua para manter a Mônica em seu pedestal!
  
 </br>
 
 ## Como iniciar o Game
----
 Caso for seja primeira vez iniciando o projeto, faça um `git clone` e siga os seguintes passos:
   - Abra o terminal e vá para a pasta deste projeto
   - Crie ou inicie sua python venv com os pacotes do `requirements.txt` instalado
@@ -37,7 +39,6 @@ Caso for seja primeira vez iniciando o projeto, faça um `git clone` e siga os s
 </br>
 
 ## Documentação
----
 *Estruturação de Repositório:* </br>
 Fizemos uma divisão em branches para cada feature, hotfix, bugfix, ou release que fosse adicionada, 
 mantendo a branch main protegida de `git push` sem revisões dos outros integrantes. O repositório também
@@ -64,10 +65,10 @@ o arquivo "default" de geração do jogo é o __main__.py e pastas com os compon
  
 *Ferramentas & Bibliotecas:* </br>
 - Bibliotecas:
-  - pygame = usado pra importar configurações próprias de jogo
-- Módulos:
-  - sys = usado pra oportunizar o exit
-  - random = usada pra spawnar buffs em intervalos aleatórios e com efeitos distintos
+  - pygame : usado pra importar configurações próprias de jogo
+- Módulos Nativos do Python:
+  - sys : usado pra oportunizar o exit
+  - random : usada pra spawnar buffs em intervalos aleatórios e com efeitos distintos
  
 *Divisão básica do trabalho:* </br>
 - Mecânicas da Mônica e dos tiros: Samuel, Clara
