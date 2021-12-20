@@ -18,7 +18,7 @@ import Game
 
 
 if __name__ == '__main__':
-    main = Game.GameLoop()
+   main = Game.GameLoop()
 
-    print('starting...')
-    main.run()
+   print('starting...')
+   main.run()
