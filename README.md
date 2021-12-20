@@ -31,24 +31,26 @@ Caso for seja primeira vez iniciando o projeto, faça um `git clone` e siga os s
   - Abra o terminal e vá para a pasta deste projeto
   - Crie ou inicie sua python venv com os pacotes do `requirements.txt` instalado
   - Insira `python run.py` ou `python -m Game` para iniciar o jogo
+
+*OS suportado: Windows*
  
 </br>
 
 ## Documentação
 ---
-*Estruturação de Repositório:*
+*Estruturação de Repositório:* </br>
 Fizemos uma divisão em branches para cada feature, hotfix, bugfix, ou release que fosse adicionada, 
 mantendo a branch main protegida de `git push` sem revisões dos outros integrantes. O repositório também
 conta com uma pasta `.github` que contém um template para a abertura de pull request para incentivar que
 o integrante escreva o que ele alterou, adicionou ou removeu em seus commits.
  
-*Estruturação de Código:*
+*Estruturação de Código:* </br>
 Dono da Lua é um jogo essencialmente orientado a objetos, pois para apressar o desenvolvimento de todos
 montandos o que chamamos de GameLoop class que implementa todas as fazes do Game Loop descritas na
 documentação oficial do Pygame. Desse modo, começamos a pensar em funcionalidades que iam ser
 componentes, ou seja, outras classes de objetos que iam ser encaixadas no GameLoop.
  
-*Estruturação de Pastas e arquivos:*
+*Estruturação de Pastas e arquivos:* </br>
 o arquivo "default" de geração do jogo é o __main__.py e pastas com os componentes a serem incrementados pelas features:
  - Components:
    - spawn.py : organização em classe da geração de inimigos (Cebolinhas) e sua formatação básica para inserção no loop.
@@ -60,14 +62,14 @@ o arquivo "default" de geração do jogo é o __main__.py e pastas com os compon
  - Sounds:
    - arquivos de BGM do jogo
  
-*Ferramentas & Bibliotecas:*
+*Ferramentas & Bibliotecas:* </br>
 - Bibliotecas:
   - pygame = usado pra importar configurações próprias de jogo
 - Módulos:
   - sys = usado pra oportunizar o exit
   - random = usada pra spawnar buffs em intervalos aleatórios e com efeitos distintos
  
-*Divisão básica do trabalho:*
+*Divisão básica do trabalho:* </br>
 - Mecânicas da Mônica e dos tiros: Samuel, Clara
 - Integração de códigos: Matheus 
 - Sistema de coleta de buffs: Rafael e Roseane
@@ -77,12 +79,14 @@ o arquivo "default" de geração do jogo é o __main__.py e pastas com os compon
 - Slides: Clara
 - Relatório: Beatriz e Matheus
  
-*Conceitos apresentados na disciplina que foram aplicados:*
+*Conceitos apresentados na disciplina que foram aplicados:* </br>
 - Listas: geração de Cebolinhas no spawn.py, geração de Sansão no gamester.py
 - Tuplas: identificação de coordenadas para implementação de coleta no powerup.py
 - Orientação a Objetos: estruturação completa dos componentes do jogo (presente em todos os subcódigos)
+- Condicionais: essencial na colisão dos elementos e regras do jogo
+- Laços: o jogo ocorre dentro de um `while True:`
  
-*Desafios & Lições:*
+*Desafios & Lições:* </br>
 Desafios:
 - Lidar com divergências de código e programação em paralelo;
 - Estudar P.O.O on-demand;
