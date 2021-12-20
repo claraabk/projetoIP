@@ -15,13 +15,12 @@ from random import randint, choice
 
 # Site-packages
 import pygame as pg
-from pygame import key
 
 # Locals
 from Game import settings
-from Game.Components import monica
+from Game.Components import gamester
 from Game.Components import background
-from Game.Components import mechanics
+from Game.Components import spawn
 from Game.Components import powerup
 
 
@@ -32,7 +31,7 @@ class GameLoop:
 
     def __init__(self):
         '''Initialize game window.'''
-        
+  
         pg.init()
 
         screen_dimesion = (settings.WIDTH, settings.HEIGHT)
@@ -40,19 +39,19 @@ class GameLoop:
         self.screen = pg.display.set_mode(screen_dimesion)
         self.running = False
 
-        self.player = monica.Hero(self.screen)
+        self.player = gamester.Hero(self.screen)
         self.scenery = background.Background(self.screen)
         self.buff = powerup.Buff(self.screen)
 
         self.count_buff = 0
 
-        self.missed_bullet_r = 1
-        self.missed_bullet_l = 1
+        self.missed_bullet_r = 2
+        self.missed_bullet_l = 2
 
         self.shootsL = []
         self.shootsR = []
 
-        self.challenge = mechanics.Challenge(self.screen)
+        self.challenge = spawn.SpawnCebolinha(self.screen)
         self.enemies = self.challenge.obstacle_rect_list
 
         self.monica_life = self.challenge.life_monica
@@ -61,6 +60,8 @@ class GameLoop:
         self.gameover = False
         self.gameon = False
 
+        self.flag = True
+        self.sound_gameover = None
 
         pg.mixer.music.load('Game\Sounds\Dancing_on_the_Street_NES.wav')
         pg.mixer.music.set_volume(0.05)
@@ -78,22 +79,23 @@ class GameLoop:
     def update(self):
         '''Game update limit rules.'''
 
-        if self.player.vel > 20:
-            self.player.vel = 20
-            print(f'VEL LIMIT: {self.player.vel}')
+        if self.player.vel > 18:
+            self.player.vel = 18
+            print(f'[LIMIT] VEL: {self.player.vel}')
                 
-        if self.player.vel < 3:
-            self.player.vel = 3
-            print(f'VEL LIMIT: {self.player.vel}')
+        if self.player.vel < 6:
+            self.player.vel = 6
+            print(f'[LIMIT] VEL: {self.player.vel}')
 
     def events(self, player, obstacles, obstacle_timer, bullet, shoots_left, shoots_right, buff_timer): 
         '''Game events method.'''
 
         for event in pg.event.get():
-            if event.type == pg.QUIT or event.type == pg.KEYDOWN:
+            if event.type == pg.QUIT:
+                self.quit()
+            if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
-                self.quit()
 
             # Cebolinhas creation
             if event.type == obstacle_timer:
@@ -130,7 +132,7 @@ class GameLoop:
     def draw(self, player, scene, shoots_left, shoots_right): 
         '''Game draw method.'''
 
-        if not self.gameon :
+        if not self.gameon :  # In the menu
             menu = pg.image.load('Game\Assets\menu_background.jpeg')
             menu = pg.transform.scale(menu,(800,600))
 
@@ -140,45 +142,15 @@ class GameLoop:
 
             keys = pg.key.get_pressed()
 
-            for shoot in shoots_right:
-                shoot.draw_right()
-        
-        # Penality Abusive Samuel Mechanics
-        if len(shoots_left)>= self.missed_bullet_l:
-            player.vel -= 0.5
-            self.missed_bullet_l += 1
-            print(f'VEL DOWN: {player.vel}')
-        
-        if len(shoots_right)>= self.missed_bullet_r:
-            player.vel -= 0.5
-            self.missed_bullet_r += 1 
-            print(f'VEL DOWN: {player.vel}')
-             
-        # Draw Monica Hearts Effect
-        if self.challenge.life_monica > 3:
-            self.challenge.life_monica = 3
-
-        if self.challenge.life_monica == 3 :
-            self.screen.blit(self.challenge.three_hearts,(650, -12))
-        elif self.challenge.life_monica == 2 :
-            self.screen.blit(self.challenge.two_hearts,(650, -12))
-        elif self.challenge.life_monica == 1 :
-            self.screen.blit(self.challenge.one_heart,(650, -12))
-        
-        # Draw score and collected buffs
-        pg.font.init()
-        myfont = pg.font.SysFont('Comic Sans MS', 28)
-
-
             if keys[pg.K_RETURN]:
                 self.gameon = True
         else :
-        # Game Loop Background reset
+
+            # Game Loop Background reset
             scene.draw()
 
             # Draw Monica
             player.draw()
-
 
             # Draw bullets
             if len(shoots_left)>=1 or len(shoots_right)>=1:
@@ -187,6 +159,17 @@ class GameLoop:
 
                 for shoot in shoots_right:
                     shoot.draw_right()
+            
+            # Penality Abusive Samuel Marsaro Mechanics
+                if len(shoots_left) > self.missed_bullet_l:
+                    player.vel -= 1
+                    self.missed_bullet_l += 2
+                    print(f'[PENALITY_LEFT] VEL DOWN: {player.vel}')
+                
+                if len(shoots_right) > self.missed_bullet_r:
+                    player.vel -= 1
+                    self.missed_bullet_r += 2
+                    print(f'[PENALITY_RIGHT] VEL DOWN: {player.vel}')
             
             # Draw Monica Hearts Effect
             if self.challenge.life_monica > 3:
@@ -200,36 +183,62 @@ class GameLoop:
                 self.screen.blit(self.challenge.one_heart,(650, -12))
             elif self.challenge.life_monica == 0 :
 
+                # stop background loop music 
                 pg.mixer.music.stop()
                 
-                gameover_sound = pg.mixer.Sound('')
-                gameover_sound.play()
+                # launches the cebolinha win sounds
+                if self.flag:
+                    sound_gameover = pg.mixer.Sound('Game\Sounds\soundgameover.wav')
+                    sound_gameover.set_volume(0.05)
+                    sound_gameover.play()
+                    self.flag = False
+                    self.sound_gameover = sound_gameover
 
+                # signals the game over
                 self.gameover = True
+
+                # temporarily shuts off cebolinhas spawn
                 self.enemies = False
                 
+                # load gameover screen
                 background = pg.image.load('Game\Assets\gameover_screen.jpg')
                 background = pg.transform.scale(background,(800,600))
 
                 self.screen.blit(background,(0,0))
 
+                # wait space press to continue or esq to quit
                 keys = pg.key.get_pressed()
 
-                if keys[pg.K_SPACE]:
+                if keys[pg.K_SPACE]:  # Reset atributes of GameLoop class
+                    self.sound_gameover.stop()
                     self.gameover = False
                     self.enemies = self.challenge.obstacle_rect_list
                     self.challenge.dead_cebolinhas = 0 
                     self.count_buff = 0
                     self.challenge.life_monica = 3
+                    self.missed_bullet_l = 3
+                    self.missed_bullet_r = 3
+                    self.shootsL = []
+                    self.shootsR = []
                     self.player.vel = 15
+                    self.flag = True
+                    self.sound_gameover = None
                     self.scenery.draw()
+
                     pg.mixer.music.load('Game\Sounds\Dancing_on_the_Street_NES.wav')
+                    pg.mixer.music.set_volume(0.05)
                     pg.mixer.music.play(-1)
 
-                pg.display.update()
+                    print('\nRESET GAME...')
+                    print(f'VEL: {self.player.vel}')
+                    print(f'LIFES: {self.challenge.life_monica}')
+                    print(f'SCORE: {self.challenge.dead_cebolinhas}')
+                    print(f'ENEMIES: activate')
+                    print(f'SCENARY: activate\n')
             
-            # Draw score
             if not self.gameover:
+
+                # Draw score
                 pg.font.init()
                 myfont = pg.font.SysFont('Comic Sans MS', 28)
 
@@ -239,42 +248,52 @@ class GameLoop:
                 textbuff = myfont.render(str(self.count_buff), False, (0, 0, 0))
                 self.screen.blit(textbuff,(460,4))
 
-                # Draw buff
-                if self.challenge.dead_cebolinhas > 25:
+                if self.challenge.dead_cebolinhas > 20:
+
+                    # Draw buff
                     self.buff.draw()
 
-                    player_rect = pg.Rect(player.x, player.y, 40, 40)
-                    buff_rect = pg.Rect(self.buff.x, self.buff.y, 40, 40)
+                    # get a "virtual" rect of player and buff
+                    player_rect = pg.Rect(player.x, player.y, 40, 80)
+                    buff_rect = pg.Rect(self.buff.x, self.buff.y, 40, 20)
 
-                    if buff_rect.colliderect(player_rect):
+                    if buff_rect.colliderect(player_rect):  # Collision effects
                     
-                        if self.buff.effect == 0:
+                        if self.buff.effect == 0:  # Life bufff
                             self.challenge.life_monica += 1
                             player.vel = 15
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\Menu1A.wav')
+                            sound_effect.set_volume(0.05)
                             sound_effect.play()
+
+                            print(f'[LIFE_BUFF] VEL RESET: {player.vel}')
+
+                        # Ray buff
                         elif  self.buff.effect == 2 or self.buff.effect == 4:
                             self.count_buff += 1
-                            player.vel += 0.5
+                            player.vel += 1
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\Item1A.wav')
+                            sound_effect.set_volume(0.05)
                             sound_effect.play()
+
+                            print(f'[RAY_BUFF] VEL UP: {player.vel}')
+                        
+                        # Ray debuff
                         else:
                             if player.vel >= 15:
-                                player.vel -= 4
+                                player.vel -= 2
                             else:
-                                player.vel -= 0.2
+                                player.vel -= 0.5
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\Item1B.wav')
+                            sound_effect.set_volume(0.05)
                             sound_effect.play()
-                        
-                        if player.vel >= 20:
-                            player.vel = 20
+
+                            print(f'[RAY_DEBUFF] VEL DOWN: {player.vel}')
                     
-                        if player.vel <= 3:
-                            player.vel = 3
-                    
+                        # make the buff disappear
                         self.buff.x = 1000
                         self.buff.y = 1000  
 
@@ -285,14 +304,14 @@ class GameLoop:
         clock = pg.time.Clock()
 
         obstacle_timer = pg.event.custom_type()
-        pg.time.set_timer(obstacle_timer, 1100)
+        pg.time.set_timer(obstacle_timer, 1180)
 
         buff_timer = pg.event.custom_type()
         pg.time.set_timer(buff_timer, 5000)
 
         while self.running:
 
-            projectile = monica.Bullet(self.screen, self.player.x, self.player.y)
+            projectile = gamester.Bullet(self.screen, self.player.x, self.player.y)
 
             self.events(
                 self.player, self.enemies, 

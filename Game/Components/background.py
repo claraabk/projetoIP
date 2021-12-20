@@ -14,11 +14,11 @@ class Background():
 
     pygame.display.set_caption("Background")
 
-    grass = pygame.image.load('Game\Assets\definitiveback.jpg')
-    grass = pygame.transform.scale(grass, (800, 600))
+    scenary = pygame.image.load('Game\Assets\definitiveback.jpg')
+    scenary = pygame.transform.scale(scenary, (800, 600))
 
     def __init__(self, screen):
         self.screen = screen
     
     def draw(self):
-        self.screen.blit(self.grass, (0, 0))
+        self.screen.blit(self.scenary, (0, 0))

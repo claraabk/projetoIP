@@ -1,6 +1,6 @@
 '''
 December 2021
-Add the major Challenge and rules of game.
+Add the major Challenge and spawn cebolinha in the game.
 IP Project  - Dono da Lua
 
 @authors: Roseane Oliverira, Clara Kenderessy, Matheus Silva, Samuel Marsaro
@@ -11,7 +11,7 @@ import pygame as pg
 from Game import settings
 
 
-class Challenge():
+class SpawnCebolinha():
 
     def __init__(self, screen):
         self.screen = screen
@@ -65,8 +65,9 @@ class Challenge():
                         if (shoot.x > obstacle.x and shoot.x < obstacle.x + 40 and 
                             shoot.y > obstacle.y - 60 and shoot.y < obstacle.y + 40):
                             self.dead_cebolinhas += 1
-                            obstacles.remove(obstacle)
                             shoots_left.remove(shoot)
+                            if obstacle in obstacles:
+                                obstacles.remove(obstacle)
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\collision.flac')
                             sound_effect.set_volume(0.05)
@@ -77,7 +78,8 @@ class Challenge():
                             shoot.y > obstacle.y - 60 and shoot.y < obstacle.y + 40):
                             self.dead_cebolinhas += 1
                             shoots_right.remove(shoot)
-                            obstacles.remove(obstacle)
+                            if obstacle in obstacles:
+                                obstacles.remove(obstacle)
 
                             sound_effect = pg.mixer.Sound('Game\Sounds\collision.flac')
                             sound_effect.set_volume(0.05)
